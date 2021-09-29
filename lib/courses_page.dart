@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_responsive_framework_tutorial/widgets.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import 'courses_data.dart';
 
@@ -14,9 +15,24 @@ class CoursesPage extends StatelessWidget {
         backgroundColor: Colors.lightBlue[800],
         centerTitle: true,
         title: const AppBarTitle(),
+        leading: ResponsiveVisibility(
+          hiddenWhen: const [Condition.largerThan(name: TABLET)],
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.menu),
+          ),
+        ),
         actions: [
-          MenuTextButton(text: 'Courses'),
-          MenuTextButton(text: 'About'),
+          const ResponsiveVisibility(
+            visible: false,
+            visibleWhen: [Condition.largerThan(name: TABLET)],
+            child: MenuTextButton(text: 'Courses'),
+          ),
+          const ResponsiveVisibility(
+            visible: false,
+            visibleWhen: [Condition.largerThan(name: TABLET)],
+            child: MenuTextButton(text: 'About'),
+          ),
           IconButton(
             icon: const Icon(Icons.mark_email_unread_rounded),
             onPressed: () {},
@@ -34,10 +50,18 @@ class CoursesPage extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          Column(
+          ResponsiveRowColumn(
+            rowMainAxisAlignment: MainAxisAlignment.center,
+            rowPadding: const EdgeInsets.all(30),
+            columnPadding: const EdgeInsets.all(30),
+            layout: ResponsiveWrapper.of(context).isSmallerThan(DESKTOP)
+                ? ResponsiveRowColumnType.COLUMN
+                : ResponsiveRowColumnType.ROW,
             children: [
-              CourseTile(course: courses[0]),
-              CourseTile(course: courses[1]),
+              ResponsiveRowColumnItem(
+                  rowFlex: 1, child: CourseTile(course: courses[0])),
+              ResponsiveRowColumnItem(
+                  rowFlex: 1, child: CourseTile(course: courses[1])),
             ],
           ),
           const SizedBox(
